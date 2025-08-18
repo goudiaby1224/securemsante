@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.Import;
+import org.springframework.core.env.Environment;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -14,11 +14,11 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
-import sn.goudiaby.msante.config.SecurityConfig;
 import sn.goudiaby.msante.dto.LoginRequestDTO;
 import sn.goudiaby.msante.dto.RegisterRequestDTO;
+import sn.goudiaby.msante.filter.JWTTokenGeneratorFilter;
+import sn.goudiaby.msante.filter.JWTTokenValidatorFilter;
 import sn.goudiaby.msante.model.User;
-
 import sn.goudiaby.msante.service.UserService;
 
 import static org.mockito.ArgumentMatchers.any;
