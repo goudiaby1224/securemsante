@@ -3,6 +3,8 @@ package sn.goudiaby.msante.model;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -12,7 +14,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "users")
-@Data
+@Getter @Setter
 @EqualsAndHashCode(of = "id")
 public class User implements UserDetails {
 
@@ -33,11 +35,11 @@ public class User implements UserDetails {
     @Column(nullable = false)
     private Boolean enabled = true;
 
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+  /*  @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Patient patient;
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Doctor doctor;
+    private Doctor doctor;*/
 
     public enum Role {
         PATIENT, DOCTOR

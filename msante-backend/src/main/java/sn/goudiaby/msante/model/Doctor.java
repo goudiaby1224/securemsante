@@ -1,14 +1,17 @@
 package sn.goudiaby.msante.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.List;
 
 @Entity
 @Table(name = "doctors")
-@Data
+@Getter @Setter
 @EqualsAndHashCode(of = "id")
 public class Doctor {
 
@@ -30,8 +33,10 @@ public class Doctor {
     private String phone;
 
     @OneToMany(mappedBy = "doctor", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonIgnore
     private List<Availability> availabilities;
 
     @OneToMany(mappedBy = "doctor", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonIgnore
     private List<Appointment> appointments;
 }
