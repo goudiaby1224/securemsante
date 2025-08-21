@@ -36,4 +36,9 @@ public class Patient {
     @OneToMany(mappedBy = "patient", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonIgnore
     private List<Appointment> appointments;
+
+    @Column(name = "created_at", updatable = false)
+    private java.time.LocalDateTime createdAt;
+    @Column(name = "updated_at")
+    private java.time.LocalDateTime updatedAt;
 }

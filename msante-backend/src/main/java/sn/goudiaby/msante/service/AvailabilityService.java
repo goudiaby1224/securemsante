@@ -62,4 +62,21 @@ public class AvailabilityService {
         dto.setStatus(availability.getStatus().name());
         return dto;
     }
+
+    public AvailabilityDTO addAvailability(AvailabilityDTO availabilityDTO) {
+    Doctor doctor = doctorRepository.findById(availabilityDTO.getDoctorId())
+            .orElseThrow(() -> new RuntimeException("Doctor not found"));
+    Availability availability = new Availability();
+    availability.setDoctor(doctor);
+    availability.setStartTime(availabilityDTO.getStartTime());
+    availability.setEndTime(availabilityDTO.getEndTime());
+    availability.setStatus(Availability.Status.AVAILABLE);
+    availability.setCreatedAt(LocalDateTime.now());
+    Availability savedAvailability = availabilityRepository.save(availability);
+    if (savedAvailability != null) {
+        return convertToDTO(savedAvailability);
+
+    }
+        return null;
+    }
 }

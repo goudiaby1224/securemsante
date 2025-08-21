@@ -27,4 +27,11 @@ public class AvailabilityController {
         List<AvailabilityDTO> availabilities = availabilityService.getAvailableSlotsByDoctor(doctorId);
         return ResponseEntity.ok(availabilities);
     }
+
+    //add availability
+    @PostMapping("/add")
+    public ResponseEntity<AvailabilityDTO> addAvailability(@RequestBody AvailabilityDTO availabilityDTO) {
+        AvailabilityDTO createdAvailability = availabilityService.addAvailability(availabilityDTO);
+        return ResponseEntity.status(201).body(createdAvailability);
+    }
 }

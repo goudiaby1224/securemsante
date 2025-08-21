@@ -36,4 +36,10 @@ public class Appointment {
     public enum Status {
         PENDING, CONFIRMED, CANCELLED, COMPLETED
     }
+    //created_at and updated_at fields can be added later if needed
+
+    @Column(name = "created_at", updatable = false)
+    private java.time.LocalDateTime createdAt;
+    @Column(name = "updated_at")
+    private java.time.LocalDateTime updatedAt;
 }

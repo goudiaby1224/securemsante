@@ -13,6 +13,7 @@ import sn.goudiaby.msante.repository.PatientRepository;
 import sn.goudiaby.msante.repository.UserRepository;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Service
 @RequiredArgsConstructor
@@ -35,7 +36,7 @@ public class UserService {
         user.setPassword(passwordEncoder.encode(request.getPassword()));
         user.setRole(request.getRoleEnum());
         user.setEnabled(true);
-
+        user.setCreatedAt(LocalDateTime.now());
         User savedUser = userRepository.save(user);
 
         // Create role-specific profile
