@@ -15,7 +15,7 @@ import sn.goudiaby.msante.model.User;
 import sn.goudiaby.msante.service.UserService;
 
 @RestController
-@RequestMapping("/auth")
+@RequestMapping("/api/auth")
 @RequiredArgsConstructor
 @CrossOrigin(origins = {"http://localhost:4200", "https://localhost:4200"})
 public class AuthController {
@@ -35,29 +35,16 @@ public class AuthController {
         }
     }
 
-    @PostMapping("/login")
-    public ResponseEntity<LoginResponseDTO> login(@Valid @RequestBody LoginRequestDTO request) {
-        try {
-            Authentication authentication = UsernamePasswordAuthenticationToken.unauthenticated(
-                    request.getEmail(), request.getPassword());
-            Authentication authenticationResponse = authenticationManager.authenticate(authentication);
-            
-            if (authenticationResponse != null && authenticationResponse.isAuthenticated()) {
-                User user = userService.findByEmail(request.getEmail());
-                LoginResponseDTO response = new LoginResponseDTO(
-                        "JWT token will be in the response header",
-                        user.getEmail(),
-                        user.getRole().name(),
-                        "Login successful"
-                );
-                return ResponseEntity.ok(response);
-            }
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body(new LoginResponseDTO(null, null, null, "Login failed: " + e.getMessage()));
+
+
+    //get user profile
+    @GetMapping("/login")
+    public ResponseEntity<User> getUserProfile(Authentication authentication) {
+        if (authentication != null && authentication.isAuthenticated()) {
+            User user = userService.findByEmail(authentication.getName());
+            return ResponseEntity.ok(user);
         }
-        
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                .body(new LoginResponseDTO(null, null, null, "Login failed"));
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
+
 }

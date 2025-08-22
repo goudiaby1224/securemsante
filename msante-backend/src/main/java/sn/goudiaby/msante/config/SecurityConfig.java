@@ -55,11 +55,12 @@ public class SecurityConfig {
                 .addFilterAfter(jwtTokenGeneratorFilter, BasicAuthenticationFilter.class)
                 .addFilterBefore(jwtTokenValidatorFilter, BasicAuthenticationFilter.class)
                 .authorizeHttpRequests((requests) -> requests
-                        .requestMatchers("/auth/register", "/auth/login", "/error").permitAll()
+                        .requestMatchers("/api/auth/register", "/error").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/doctors", "/api/availabilities").permitAll()
                         .requestMatchers("/api/patients/**").hasRole("PATIENT")
                         .requestMatchers("/api/doctors/**").hasRole("DOCTOR")
                         .requestMatchers("/api/appointments/**").authenticated()
+                        .requestMatchers("/api/auth/login").authenticated()
                         .anyRequest().authenticated());
         http.formLogin(withDefaults());
         http.httpBasic(withDefaults());
