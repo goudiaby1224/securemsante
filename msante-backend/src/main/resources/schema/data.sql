@@ -3,10 +3,13 @@ CREATE TABLE users (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     email VARCHAR(255) NOT NULL UNIQUE,
     password VARCHAR(255) NOT NULL,
+    firstname VARCHAR(100) NOT NULL,
+    lastname VARCHAR(100) NOT NULL,
+    phone VARCHAR(20),
     role VARCHAR(50) NOT NULL,
     enabled BOOLEAN NOT NULL DEFAULT TRUE,
-    created_at DATETIME NOT NULL,
-    updated_at DATETIME NOT NULL
+    created_at DATETIME,
+    updated_at DATETIME
 );
 
 -- Doctor Table
@@ -15,7 +18,6 @@ CREATE TABLE doctors (
     user_id BIGINT NOT NULL UNIQUE,
     specialty VARCHAR(255),
     license_number VARCHAR(100),
-    phone VARCHAR(50),
     created_at DATETIME NOT NULL,
     updated_at DATETIME NOT NULL,
     FOREIGN KEY (user_id) REFERENCES users(id)
@@ -26,12 +28,12 @@ CREATE TABLE patients (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     user_id BIGINT NOT NULL UNIQUE,
     address VARCHAR(255),
-    phone VARCHAR(50),
     birth_date DATE,
     created_at DATETIME NOT NULL,
     updated_at DATETIME NOT NULL,
     FOREIGN KEY (user_id) REFERENCES users(id)
 );
+
 
 -- Availability Table
 CREATE TABLE availabilities (

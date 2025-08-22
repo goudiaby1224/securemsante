@@ -29,8 +29,8 @@ public class Doctor {
     @Column(length = 100)
     private String licenseNumber;
 
-    @Column(length = 50)
-    private String phone;
+   // @Column(length = 50)
+   // private String phone;
 
     @OneToMany(mappedBy = "doctor", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonIgnore

@@ -55,12 +55,11 @@ public class SecurityConfig {
                 .addFilterAfter(jwtTokenGeneratorFilter, BasicAuthenticationFilter.class)
                 .addFilterBefore(jwtTokenValidatorFilter, BasicAuthenticationFilter.class)
                 .authorizeHttpRequests((requests) -> requests
-                        .requestMatchers("/api/auth/register", "/error").permitAll()
+                        .requestMatchers("/api/auth/register", "/error","/api/auth/apiLogin","/logout").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/doctors", "/api/availabilities").permitAll()
                         .requestMatchers("/api/patients/**").hasRole("PATIENT")
                         .requestMatchers("/api/doctors/**").hasRole("DOCTOR")
                         .requestMatchers("/api/appointments/**").authenticated()
-                        .requestMatchers("/api/auth/login").authenticated()
                         .anyRequest().authenticated());
         http.formLogin(withDefaults());
         http.httpBasic(withDefaults());
@@ -75,9 +74,10 @@ public class SecurityConfig {
     @Bean
     public AuthenticationManager authenticationManager(UserDetailsService userDetailsService,
                                                       PasswordEncoder passwordEncoder) {
-        DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
-        authenticationProvider.setUserDetailsService(userDetailsService);
-        authenticationProvider.setPasswordEncoder(passwordEncoder);
-        return new ProviderManager(authenticationProvider);
+        MSanteUsernamePasswordAuthenticationProvider authenticationProvider =
+                new MSanteUsernamePasswordAuthenticationProvider(userDetailsService, passwordEncoder);
+        ProviderManager providerManager = new ProviderManager(authenticationProvider);
+        providerManager.setEraseCredentialsAfterAuthentication(false);
+        return  providerManager;
     }
 }

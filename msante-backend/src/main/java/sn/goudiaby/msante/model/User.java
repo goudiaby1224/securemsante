@@ -21,6 +21,15 @@ public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    //last-name , first-name, phone
+    @Column(nullable = false)
+    private String lastName;
+
+    @Column(nullable = false)
+    private String firstName;
+
+    @Column(nullable = false)
+    private String phone;
 
     @Column(nullable = false, unique = true)
     private String email;
@@ -54,6 +63,8 @@ public class User implements UserDetails {
     public String getUsername() {
         return email;
     }
+
+
 
     @Override
     public boolean isAccountNonExpired() {

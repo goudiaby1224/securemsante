@@ -27,8 +27,8 @@ public class Patient {
     @Column
     private String address;
 
-    @Column(length = 50)
-    private String phone;
+   // @Column(length = 50)
+    //private String phone;
 
     @Column
     private LocalDate birthDate;

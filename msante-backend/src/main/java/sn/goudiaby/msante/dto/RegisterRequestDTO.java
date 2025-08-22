@@ -14,9 +14,14 @@ public class RegisterRequestDTO {
     
     @NotBlank
     private String password;
-    
+    //last-name , first-name
     @NotBlank
-    private String role; // PATIENT or DOCTOR
+    private String lastName;
+    @NotBlank
+    private String firstName;
+
+    @NotBlank
+    private String userType; // PATIENT or DOCTOR
     
     // Optional patient fields
     private String address;
@@ -28,6 +33,6 @@ public class RegisterRequestDTO {
     private String licenseNumber;
     
     public User.Role getRoleEnum() {
-        return User.Role.valueOf(role.toUpperCase());
+        return User.Role.valueOf(userType.toUpperCase());
     }
 }

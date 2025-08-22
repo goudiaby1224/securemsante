@@ -34,11 +34,15 @@ public class UserService {
         // Create User
         User user = new User();
         user.setEmail(request.getEmail());
+        user.setLastName(request.getLastName());
+        user.setFirstName(request.getFirstName());
+        user.setPhone(request.getPhone());
         user.setPassword(passwordEncoder.encode(request.getPassword()));
         user.setRole(request.getRoleEnum());
         user.setEnabled(true);
         user.setCreatedAt(LocalDateTime.now());
         User savedUser = userRepository.save(user);
+
 
         // Create role-specific profile
         if (request.getRoleEnum() == User.Role.PATIENT) {
@@ -54,7 +58,6 @@ public class UserService {
         Patient patient = new Patient();
         patient.setUser(user);
         patient.setAddress(request.getAddress());
-        patient.setPhone(request.getPhone());
         
         if (request.getBirthDate() != null && !request.getBirthDate().isEmpty()) {
             patient.setBirthDate(LocalDate.parse(request.getBirthDate()));
@@ -68,7 +71,6 @@ public class UserService {
         doctor.setUser(user);
         doctor.setSpecialty(request.getSpecialty());
         doctor.setLicenseNumber(request.getLicenseNumber());
-        doctor.setPhone(request.getPhone());
         
         doctorRepository.save(doctor);
     }
@@ -77,4 +79,9 @@ public class UserService {
         Optional<User> optionalUser= userRepository.findByEmail(email);
                return optionalUser.orElseThrow(() -> new RuntimeException("User not found"));
     }
+
+    public boolean checkPassword(User user, String rawPassword) {
+        return passwordEncoder.matches(rawPassword, user.getPassword());
+    }
+
 }
