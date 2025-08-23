@@ -8,7 +8,10 @@ import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
 
@@ -44,11 +47,11 @@ public class User implements UserDetails {
     @Column(nullable = false)
     private Boolean enabled = true;
 
-  /*  @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Patient patient;
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Doctor doctor;*/
+    private Doctor doctor;
 
     public enum Role {
         PATIENT, DOCTOR
@@ -86,8 +89,11 @@ public class User implements UserDetails {
         return enabled;
     }
 
+    @CreatedDate
     @Column(name = "created_at", updatable = false)
-    private java.time.LocalDateTime createdAt;
+    private LocalDateTime createdAt;
+    
+    @LastModifiedDate
     @Column(name = "updated_at")
-    private java.time.LocalDateTime updatedAt;
+    private LocalDateTime updatedAt;
 }

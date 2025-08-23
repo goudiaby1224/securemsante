@@ -22,6 +22,7 @@ import sn.goudiaby.msante.dto.LoginRequestDTO;
 import sn.goudiaby.msante.dto.LoginResponseDTO;
 import sn.goudiaby.msante.dto.RegisterRequestDTO;
 import sn.goudiaby.msante.dto.UserResponseDTO;
+import sn.goudiaby.msante.dto.TokenRefreshRequestDTO;
 import sn.goudiaby.msante.model.User;
 import sn.goudiaby.msante.service.AuthService;
 import sn.goudiaby.msante.service.UserService;
@@ -93,5 +94,18 @@ public class AuthController {
         Map<String, Boolean> response = new HashMap<>();
         response.put("success", true);
         return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/refresh-token")
+    public ResponseEntity<LoginResponseDTO> refreshToken(@RequestBody TokenRefreshRequestDTO refreshRequest) {
+        LoginResponseDTO response = authService.refreshToken(refreshRequest.getRefreshToken());
+        
+        if (response.getUser() != null && response.getToken() != null) {
+            return ResponseEntity.ok()
+                    .header(ApplicationConstants.JWT_HEADER, response.getToken())
+                    .body(response);
+        }
+        
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
     }
 }

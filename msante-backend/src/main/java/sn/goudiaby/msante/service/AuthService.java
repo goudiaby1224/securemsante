@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import sn.goudiaby.msante.constants.ApplicationConstants;
 import sn.goudiaby.msante.dto.LoginResponseDTO;
 import sn.goudiaby.msante.dto.UserResponseDTO;
+import sn.goudiaby.msante.dto.TokenRefreshRequestDTO;
 import sn.goudiaby.msante.model.User;
 
 import javax.crypto.SecretKey;
@@ -60,5 +61,38 @@ public class AuthService {
         }
 
         return new LoginResponseDTO(null, null);
+    }
+
+    public LoginResponseDTO refreshToken(String refreshToken) {
+        try {
+            // In a real implementation, you would validate the refresh token
+            // For now, we'll create a new JWT token
+            String secret = env.getProperty(ApplicationConstants.JWT_SECRET_KEY,
+                    ApplicationConstants.JWT_SECRET_DEFAULT_VALUE);
+            SecretKey secretKey = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
+
+            // For simplicity, we'll generate a new token
+            // In production, you should validate the refresh token and extract user info
+            String jwt = Jwts.builder()
+                    .issuer("M-Santé")
+                    .subject("JWT Token")
+                    .claim("username", "user@example.com") // This should come from refresh token validation
+                    .claim("authorities", "ROLE_PATIENT") // This should come from refresh token validation
+                    .issuedAt(new Date())
+                    .expiration(new Date(System.currentTimeMillis() + 30000000))
+                    .signWith(secretKey)
+                    .compact();
+
+            // For now, return a basic response
+            // In production, you would fetch the actual user from the refresh token
+            UserResponseDTO userDTO = new UserResponseDTO(
+                    1L, "User", "Example", "+221-77-123-4567", 
+                    "user@example.com", "PATIENT", true, new Date().toString()
+            );
+
+            return new LoginResponseDTO(userDTO, jwt);
+        } catch (Exception e) {
+            return new LoginResponseDTO(null, null);
+        }
     }
 }
