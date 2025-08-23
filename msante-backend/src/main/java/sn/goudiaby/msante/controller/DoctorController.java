@@ -1,5 +1,6 @@
 package sn.goudiaby.msante.controller;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,6 +13,7 @@ import java.util.List;
 @RequestMapping("/api/doctors")
 @RequiredArgsConstructor
 @CrossOrigin(origins = {"http://localhost:4200", "https://localhost:4200"})
+    @Tag(name = "Doctor", description = "Endpoints for doctor management")
 public class DoctorController {
 
     private final DoctorRepository doctorRepository;

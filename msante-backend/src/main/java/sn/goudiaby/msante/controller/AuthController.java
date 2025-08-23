@@ -25,7 +25,7 @@ import sn.goudiaby.msante.dto.UserResponseDTO;
 import sn.goudiaby.msante.model.User;
 import sn.goudiaby.msante.service.AuthService;
 import sn.goudiaby.msante.service.UserService;
-
+import io.swagger.v3.oas.annotations.tags.Tag;
 import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
@@ -37,11 +37,13 @@ import java.util.stream.Collectors;
 @RequestMapping("/api/auth")
 @RequiredArgsConstructor
 @CrossOrigin(origins = {"http://localhost:4200", "https://localhost:4200"})
+@Tag(name = "Authentication", description = "Endpoints for authentication")
 public class AuthController {
 
     private final UserService userService;
     private final AuthService authService;
     private final AuthenticationManager authenticationManager;
+
     private final PasswordEncoder passwordEncoder;
     private final Environment env;
     @PostMapping("/register")

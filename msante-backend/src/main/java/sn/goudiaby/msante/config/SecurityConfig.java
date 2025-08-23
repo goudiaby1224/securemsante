@@ -55,12 +55,15 @@ public class SecurityConfig {
                 .addFilterAfter(jwtTokenGeneratorFilter, BasicAuthenticationFilter.class)
                 .addFilterBefore(jwtTokenValidatorFilter, BasicAuthenticationFilter.class)
                 .authorizeHttpRequests((requests) -> requests
-                        .requestMatchers("/api/auth/register", "/error","/api/auth/apiLogin","/logout").permitAll()
+            .requestMatchers("/", "/api/auth/register", "/error","/api/auth/apiLogin","/logout","/swagger-ui/**", "/swagger-ui.html", "/api/api-docs/**", "/api/api-docs.yaml",
+                "/api/api-docs", "/v3/api-docs/**",
+                "/webjars/**",
+                "/swagger-ui/index.html").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/doctors", "/api/availabilities").permitAll()
                         .requestMatchers("/api/patients/**").hasRole("PATIENT")
                         .requestMatchers("/api/doctors/**").hasRole("DOCTOR")
                         .requestMatchers("/api/appointments/**").authenticated()
-                        .anyRequest().authenticated());
+                        );
         http.formLogin(withDefaults());
         http.httpBasic(withDefaults());
         return http.build();
