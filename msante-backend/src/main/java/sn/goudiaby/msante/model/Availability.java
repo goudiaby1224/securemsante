@@ -30,10 +30,14 @@ public class Availability {
     @Column(nullable = false)
     private Status status = Status.AVAILABLE;
 
-    @OneToOne(mappedBy = "availability", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Appointment appointment;
+   // @OneToOne(mappedBy = "availability", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+   // private Appointment appointment;
 
     public enum Status {
         AVAILABLE, BOOKED, CANCELLED
     }
+    @Column(name = "created_at", updatable = false)
+    private java.time.LocalDateTime createdAt;
+    @Column(name = "updated_at")
+    private java.time.LocalDateTime updatedAt;
 }

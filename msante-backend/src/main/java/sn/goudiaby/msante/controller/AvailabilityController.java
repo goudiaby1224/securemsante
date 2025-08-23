@@ -1,5 +1,6 @@
 package sn.goudiaby.msante.controller;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,6 +13,7 @@ import java.util.List;
 @RequestMapping("/api/availabilities")
 @RequiredArgsConstructor
 @CrossOrigin(origins = {"http://localhost:4200", "https://localhost:4200"})
+    @Tag(name = "Availability", description = "Endpoints for availability management")
 public class AvailabilityController {
 
     private final AvailabilityService availabilityService;
@@ -26,5 +28,12 @@ public class AvailabilityController {
     public ResponseEntity<List<AvailabilityDTO>> getAvailableSlotsByDoctor(@PathVariable Long doctorId) {
         List<AvailabilityDTO> availabilities = availabilityService.getAvailableSlotsByDoctor(doctorId);
         return ResponseEntity.ok(availabilities);
+    }
+
+    //add availability
+    @PostMapping("/add")
+    public ResponseEntity<AvailabilityDTO> addAvailability(@RequestBody AvailabilityDTO availabilityDTO) {
+        AvailabilityDTO createdAvailability = availabilityService.addAvailability(availabilityDTO);
+        return ResponseEntity.status(201).body(createdAvailability);
     }
 }

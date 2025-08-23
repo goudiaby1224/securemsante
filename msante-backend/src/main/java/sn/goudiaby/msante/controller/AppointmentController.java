@@ -1,6 +1,7 @@
 package sn.goudiaby.msante.controller;
 
 import jakarta.validation.Valid;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +17,7 @@ import java.util.List;
 @RequestMapping("/api/appointments")
 @RequiredArgsConstructor
 @CrossOrigin(origins = {"http://localhost:4200", "https://localhost:4200"})
+@Tag(name = "Appointment", description = "Endpoints for appointment management")
 public class AppointmentController {
 
     private final AppointmentService appointmentService;
