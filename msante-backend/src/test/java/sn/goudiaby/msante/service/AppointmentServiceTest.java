@@ -67,7 +67,7 @@ class AppointmentServiceTest {
         patient.setId(1L);
         patient.setUser(patientUser);
         patient.setAddress("123 Test St");
-        patient.setPhone("555-1234");
+//        patient.setPhone("555-1234");
 
         User doctorUser = new User();
         doctorUser.setId(2L);
