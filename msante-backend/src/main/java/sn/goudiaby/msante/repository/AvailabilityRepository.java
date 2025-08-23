@@ -27,4 +27,15 @@ public interface AvailabilityRepository extends JpaRepository<Availability, Long
            "AND a.startTime > :now " +
            "ORDER BY a.startTime ASC")
     List<Availability> findAvailableSlots(@Param("now") LocalDateTime now);
+    
+    @Query("SELECT a FROM Availability a WHERE a.status = 'AVAILABLE' " +
+           "AND a.startTime BETWEEN :startTime AND :endTime " +
+           "AND (:specialty IS NULL OR a.doctor.specialty = :specialty) " +
+           "AND (:doctorId IS NULL OR a.doctor.id = :doctorId) " +
+           "ORDER BY a.startTime ASC")
+    List<Availability> findAvailableSlots(
+            @Param("startTime") LocalDateTime startTime,
+            @Param("endTime") LocalDateTime endTime,
+            @Param("specialty") String specialty,
+            @Param("doctorId") Long doctorId);
 }

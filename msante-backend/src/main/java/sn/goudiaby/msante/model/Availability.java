@@ -3,6 +3,8 @@ package sn.goudiaby.msante.model;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 
 import java.time.LocalDateTime;
 
@@ -16,7 +18,7 @@ public class Availability {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "doctor_id", nullable = false)
     private Doctor doctor;
 
@@ -30,14 +32,26 @@ public class Availability {
     @Column(nullable = false)
     private Status status = Status.AVAILABLE;
 
-   // @OneToOne(mappedBy = "availability", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-   // private Appointment appointment;
+    @Column(name = "created_at", updatable = false)
+    @CreatedDate
+    private LocalDateTime createdAt;
+
+    @Column(name = "updated_at")
+    @LastModifiedDate
+    private LocalDateTime updatedAt;
+
+    @PrePersist
+    protected void onCreate() {
+        createdAt = LocalDateTime.now();
+        updatedAt = LocalDateTime.now();
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        updatedAt = LocalDateTime.now();
+    }
 
     public enum Status {
-        AVAILABLE, BOOKED, CANCELLED
+        AVAILABLE, BOOKED, CANCELLED, BLOCKED
     }
-    @Column(name = "created_at", updatable = false)
-    private java.time.LocalDateTime createdAt;
-    @Column(name = "updated_at")
-    private java.time.LocalDateTime updatedAt;
 }

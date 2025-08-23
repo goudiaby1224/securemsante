@@ -4,8 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import sn.goudiaby.msante.dto.AppointmentDTO;
-import sn.goudiaby.msante.dto.BookAppointmentRequestDTO;
+import sn.goudiaby.msante.dto.*;
 import sn.goudiaby.msante.model.Appointment;
 import sn.goudiaby.msante.model.Availability;
 import sn.goudiaby.msante.model.Patient;
@@ -15,6 +14,9 @@ import sn.goudiaby.msante.repository.AvailabilityRepository;
 import sn.goudiaby.msante.repository.PatientRepository;
 import sn.goudiaby.msante.repository.UserRepository;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -28,7 +30,7 @@ public class AppointmentService {
     private final UserRepository userRepository;
 
     @Transactional
-    public AppointmentDTO bookAppointment(BookAppointmentRequestDTO request) {
+    public AppointmentResponseDTO bookAppointment(BookAppointmentRequestDTO request) {
         String currentUserEmail = SecurityContextHolder.getContext().getAuthentication().getName();
         
         User user = userRepository.findByEmail(currentUserEmail)
@@ -57,24 +59,24 @@ public class AppointmentService {
         appointment.setNotes(request.getNotes());
 
         Appointment savedAppointment = appointmentRepository.save(appointment);
-        return convertToDTO(savedAppointment);
+        return AppointmentResponseDTO.fromAppointment(savedAppointment);
     }
 
-    public List<AppointmentDTO> getPatientAppointments() {
+    public List<AppointmentResponseDTO> getPatientAppointments() {
         String currentUserEmail = SecurityContextHolder.getContext().getAuthentication().getName();
         List<Appointment> appointments = appointmentRepository.findByPatientEmail(currentUserEmail);
         
         return appointments.stream()
-                .map(this::convertToDTO)
+                .map(AppointmentResponseDTO::fromAppointment)
                 .collect(Collectors.toList());
     }
 
-    public List<AppointmentDTO> getDoctorAppointments() {
+    public List<AppointmentResponseDTO> getDoctorAppointments() {
         String currentUserEmail = SecurityContextHolder.getContext().getAuthentication().getName();
         List<Appointment> appointments = appointmentRepository.findByDoctorEmail(currentUserEmail);
         
         return appointments.stream()
-                .map(this::convertToDTO)
+                .map(AppointmentResponseDTO::fromAppointment)
                 .collect(Collectors.toList());
     }
 
@@ -101,6 +103,73 @@ public class AppointmentService {
         availabilityRepository.save(appointment.getAvailability());
     }
 
+    public List<AppointmentResponseDTO> searchAvailableSlots(SearchAvailabilityRequestDTO request) {
+        LocalDateTime startOfDay = request.getDate().atStartOfDay();
+        LocalDateTime endOfDay = request.getDate().atTime(LocalTime.MAX);
+        
+        List<Availability> availabilities = availabilityRepository.findAvailableSlots(
+            startOfDay, 
+            endOfDay, 
+            request.getSpecialty(), 
+            request.getDoctorId()
+        );
+        
+        return availabilities.stream()
+            .map(this::convertAvailabilityToDTO)
+            .collect(Collectors.toList());
+    }
+
+    @Transactional
+    public AppointmentResponseDTO rescheduleAppointment(Long appointmentId, Long newAvailabilityId) {
+        String currentUserEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+        
+        Appointment appointment = appointmentRepository.findById(appointmentId)
+            .orElseThrow(() -> new RuntimeException("Appointment not found"));
+        
+        // Verify user has permission to reschedule
+        boolean canReschedule = appointment.getPatient().getUser().getEmail().equals(currentUserEmail) ||
+                               appointment.getDoctor().getUser().getEmail().equals(currentUserEmail);
+        
+        if (!canReschedule) {
+            throw new RuntimeException("Not authorized to reschedule this appointment");
+        }
+        
+        // Get new availability slot
+        Availability newAvailability = availabilityRepository.findById(newAvailabilityId)
+            .orElseThrow(() -> new RuntimeException("New availability slot not found"));
+        
+        if (newAvailability.getStatus() != Availability.Status.AVAILABLE) {
+            throw new RuntimeException("New availability slot is not available");
+        }
+        
+        // Free up old availability slot
+        appointment.getAvailability().setStatus(Availability.Status.AVAILABLE);
+        availabilityRepository.save(appointment.getAvailability());
+        
+        // Book new availability slot
+        newAvailability.setStatus(Availability.Status.BOOKED);
+        availabilityRepository.save(newAvailability);
+        
+        // Update appointment
+        appointment.setAvailability(newAvailability);
+        appointment.setStatus(Appointment.Status.RESCHEDULED);
+        appointment.setUpdatedAt(LocalDateTime.now());
+        
+        Appointment savedAppointment = appointmentRepository.save(appointment);
+        return AppointmentResponseDTO.fromAppointment(savedAppointment);
+    }
+
+    public List<AppointmentResponseDTO> getUpcomingAppointments() {
+        String currentUserEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+        LocalDateTime now = LocalDateTime.now();
+        
+        List<Appointment> appointments = appointmentRepository.findUpcomingAppointments(currentUserEmail, now);
+        
+        return appointments.stream()
+            .map(AppointmentResponseDTO::fromAppointment)
+            .collect(Collectors.toList());
+    }
+
     private AppointmentDTO convertToDTO(Appointment appointment) {
         AppointmentDTO dto = new AppointmentDTO();
         dto.setId(appointment.getId());
@@ -112,6 +181,20 @@ public class AppointmentService {
         dto.setAppointmentTime(appointment.getAvailability().getStartTime());
         dto.setStatus(appointment.getStatus().name());
         dto.setNotes(appointment.getNotes());
+        return dto;
+    }
+
+    private AppointmentResponseDTO convertAvailabilityToDTO(Availability availability) {
+        AppointmentResponseDTO dto = new AppointmentResponseDTO();
+        dto.setDoctorId(availability.getDoctor().getId());
+        dto.setDoctorFirstName(availability.getDoctor().getUser().getFirstName());
+        dto.setDoctorLastName(availability.getDoctor().getUser().getLastName());
+        dto.setDoctorEmail(availability.getDoctor().getUser().getEmail());
+        dto.setDoctorSpecialty(availability.getDoctor().getSpecialty());
+        dto.setDoctorDepartment(availability.getDoctor().getLicenseNumber());
+        dto.setAppointmentTime(availability.getStartTime());
+        dto.setEndTime(availability.getEndTime());
+        dto.setStatus("AVAILABLE");
         return dto;
     }
 }

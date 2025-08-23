@@ -24,4 +24,9 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long> 
     
     @Query("SELECT a FROM Appointment a WHERE a.doctor.user.email = :email")
     List<Appointment> findByDoctorEmail(@Param("email") String email);
+    
+    @Query("SELECT a FROM Appointment a WHERE (a.patient.user.email = :email OR a.doctor.user.email = :email) " +
+           "AND a.availability.startTime > :now " +
+           "ORDER BY a.availability.startTime ASC")
+    List<Appointment> findUpcomingAppointments(@Param("email") String email, @Param("now") java.time.LocalDateTime now);
 }
