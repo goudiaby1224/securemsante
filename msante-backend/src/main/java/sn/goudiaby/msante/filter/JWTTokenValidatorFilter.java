@@ -23,10 +23,14 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
 @Component
-@RequiredArgsConstructor
+//@RequiredArgsConstructor
 public class JWTTokenValidatorFilter extends OncePerRequestFilter {
 
     private final Environment env;
+
+    public JWTTokenValidatorFilter(Environment env) {
+        this.env = env;
+    }
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,

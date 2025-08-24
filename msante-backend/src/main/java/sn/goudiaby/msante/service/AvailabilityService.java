@@ -154,4 +154,12 @@ public class AvailabilityService {
         availability.setStatus(Availability.Status.BLOCKED);
         return availabilityRepository.save(availability);
     }
+
+    public List<Availability> getAllAvailableSlots() {
+        LocalDateTime now = LocalDateTime.now();
+        List<Availability> availabilities = availabilityRepository.findAvailableSlotsAfter(now);
+        return availabilities.stream()
+                .filter(availability -> availability.getStartTime().isAfter(now))
+                .collect(Collectors.toList());
+    }
 }

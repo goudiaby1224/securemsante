@@ -14,19 +14,22 @@ public class RegisterRequestDTO {
     
     @NotBlank
     private String password;
-    //last-name , first-name
+    
     @NotBlank
     private String lastName;
+    
     @NotBlank
     private String firstName;
 
+    @NotBlank
+    private String phone;
+    
     @NotBlank
     private String userType; // PATIENT or DOCTOR
     
     // Optional patient fields
     private String address;
-    private String phone;
-    private String birthDate; // yyyy-MM-dd format
+    private String dateOfBirth; // yyyy-MM-dd format - matches Patient model
     
     // Optional doctor fields
     private String specialty;
@@ -35,4 +38,16 @@ public class RegisterRequestDTO {
     public User.Role getRoleEnum() {
         return User.Role.valueOf(userType.toUpperCase());
     }
+    
+    // Manual getters to ensure compilation works
+    public String getEmail() { return email; }
+    public String getPassword() { return password; }
+    public String getLastName() { return lastName; }
+    public String getFirstName() { return firstName; }
+    public String getPhone() { return phone; }
+    public String getUserType() { return userType; }
+    public String getAddress() { return address; }
+    public String getDateOfBirth() { return dateOfBirth; }
+    public String getSpecialty() { return specialty; }
+    public String getLicenseNumber() { return licenseNumber; }
 }

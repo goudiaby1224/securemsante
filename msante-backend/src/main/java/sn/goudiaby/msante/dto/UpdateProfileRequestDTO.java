@@ -26,7 +26,7 @@ public class UpdateProfileRequestDTO {
     @Size(max = 500, message = "Address cannot exceed 500 characters")
     private String address;
     
-    private LocalDate birthDate;
+    private LocalDate dateOfBirth; // Changed from birthDate to match Patient model
     
     // Optional fields for specific user types
     private String specialty; // For doctors
@@ -34,4 +34,16 @@ public class UpdateProfileRequestDTO {
     private String emergencyContactName; // For patients
     private String emergencyContactPhone; // For patients
     private String emergencyContactRelationship; // For patients
+    
+    // Manual getters to ensure compilation works
+    public String getFirstName() { return firstName; }
+    public String getLastName() { return lastName; }
+    public String getPhone() { return phone; }
+    public String getAddress() { return address; }
+    public LocalDate getDateOfBirth() { return dateOfBirth; }
+    public String getSpecialty() { return specialty; }
+    public String getLicenseNumber() { return licenseNumber; }
+    public String getEmergencyContactName() { return emergencyContactName; }
+    public String getEmergencyContactPhone() { return emergencyContactPhone; }
+    public String getEmergencyContactRelationship() { return emergencyContactRelationship; }
 }

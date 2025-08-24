@@ -28,12 +28,20 @@ import static org.springframework.security.config.Customizer.withDefaults;
 
 @Configuration
 @EnableMethodSecurity
-@RequiredArgsConstructor
+//@RequiredArgsConstructor
 public class SecurityConfig {
 
     private final UserDetailsService userDetailsService;
     private final JWTTokenGeneratorFilter jwtTokenGeneratorFilter;
     private final JWTTokenValidatorFilter jwtTokenValidatorFilter;
+
+    public SecurityConfig(UserDetailsService userDetailsService, JWTTokenGeneratorFilter jwtTokenGeneratorFilter, JWTTokenValidatorFilter jwtTokenValidatorFilter) {
+        this.userDetailsService = userDetailsService;
+        this.jwtTokenGeneratorFilter = jwtTokenGeneratorFilter;
+        this.jwtTokenValidatorFilter = jwtTokenValidatorFilter;
+    }
+
+
 
     @Bean
     SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {

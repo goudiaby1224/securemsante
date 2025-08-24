@@ -22,10 +22,14 @@ import java.util.Date;
 import java.util.stream.Collectors;
 
 @Component
-@RequiredArgsConstructor
+//@RequiredArgsConstructor
 public class JWTTokenGeneratorFilter extends OncePerRequestFilter {
 
     private final Environment env;
+
+    public JWTTokenGeneratorFilter(Environment env) {
+        this.env = env;
+    }
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,

@@ -45,7 +45,6 @@ public class UserService {
         user.setPassword(passwordEncoder.encode(request.getPassword()));
         user.setRole(request.getRoleEnum());
         user.setEnabled(true);
-        user.setCreatedAt(LocalDateTime.now());
         User savedUser = userRepository.save(user);
 
 
@@ -62,10 +61,13 @@ public class UserService {
     private void createPatientProfile(User user, RegisterRequestDTO request) {
         Patient patient = new Patient();
         patient.setUser(user);
+        patient.setFirstName(request.getFirstName());
+        patient.setLastName(request.getLastName());
+        patient.setPhone(request.getPhone());
         patient.setAddress(request.getAddress());
         
-        if (request.getBirthDate() != null && !request.getBirthDate().isEmpty()) {
-            patient.setBirthDate(LocalDate.parse(request.getBirthDate()));
+        if (request.getDateOfBirth() != null && !request.getDateOfBirth().isEmpty()) {
+            patient.setDateOfBirth(LocalDate.parse(request.getDateOfBirth()));
         }
         
         patientRepository.save(patient);
@@ -103,7 +105,6 @@ public class UserService {
         user.setFirstName(updateRequest.getFirstName());
         user.setLastName(updateRequest.getLastName());
         user.setPhone(updateRequest.getPhone());
-        user.setUpdatedAt(LocalDateTime.now());
         
         // Update role-specific profile information
         if (user.getRole() == User.Role.PATIENT) {
@@ -123,9 +124,12 @@ public class UserService {
             patient.setUser(user);
         }
         
+        patient.setFirstName(updateRequest.getFirstName());
+        patient.setLastName(updateRequest.getLastName());
+        patient.setPhone(updateRequest.getPhone());
         patient.setAddress(updateRequest.getAddress());
-        if (updateRequest.getBirthDate() != null) {
-            patient.setBirthDate(updateRequest.getBirthDate());
+        if (updateRequest.getDateOfBirth() != null) {
+            patient.setDateOfBirth(updateRequest.getDateOfBirth());
         }
         
         patientRepository.save(patient);
@@ -160,7 +164,6 @@ public class UserService {
         
         // Update password
         user.setPassword(passwordEncoder.encode(changePasswordRequest.getNewPassword()));
-        user.setUpdatedAt(LocalDateTime.now());
         userRepository.save(user);
     }
 

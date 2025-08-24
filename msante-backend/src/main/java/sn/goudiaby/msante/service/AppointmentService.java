@@ -160,14 +160,19 @@ public class AppointmentService {
     }
 
     public List<AppointmentResponseDTO> getUpcomingAppointments() {
-        String currentUserEmail = SecurityContextHolder.getContext().getAuthentication().getName();
-        LocalDateTime now = LocalDateTime.now();
-        
-        List<Appointment> appointments = appointmentRepository.findUpcomingAppointments(currentUserEmail, now);
-        
-        return appointments.stream()
-            .map(AppointmentResponseDTO::fromAppointment)
-            .collect(Collectors.toList());
+        try {
+            String email = SecurityContextHolder.getContext().getAuthentication().getName();
+            List<Appointment> appointments = appointmentRepository.findUpcomingAppointments(email, LocalDateTime.now());
+            return appointments.stream()
+                    .map(this::convertAvailabilityToDTO)
+                    .collect(Collectors.toList());
+        } catch (Exception e) {
+            throw new RuntimeException("Error retrieving upcoming appointments: " + e.getMessage());
+        }
+    }
+
+    public List<Appointment> getAppointmentsByDate(LocalDate date) {
+        return appointmentRepository.findByDate(date);
     }
 
     private AppointmentDTO convertToDTO(Appointment appointment) {

@@ -16,4 +16,9 @@ public class ChangePasswordRequestDTO {
     
     @NotBlank(message = "Password confirmation is required")
     private String confirmPassword;
+    
+    // Manual getters to ensure compilation works
+    public String getCurrentPassword() { return currentPassword; }
+    public String getNewPassword() { return newPassword; }
+    public String getConfirmPassword() { return confirmPassword; }
 }
