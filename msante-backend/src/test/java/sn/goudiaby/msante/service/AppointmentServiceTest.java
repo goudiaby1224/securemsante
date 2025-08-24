@@ -104,6 +104,7 @@ class AppointmentServiceTest {
         Appointment appointment = new Appointment();
         appointment.setId(1L);
         appointment.setPatient(patient);
+        appointment.setDoctor(doctor);
         appointment.setAvailability(availability);
         appointment.setStatus(Appointment.Status.CONFIRMED);
         appointment.setNotes("Test appointment");
@@ -198,6 +199,7 @@ class AppointmentServiceTest {
         Appointment appointment = new Appointment();
         appointment.setId(1L);
         appointment.setPatient(patient);
+        appointment.setDoctor(doctor);
         appointment.setAvailability(availability);
         appointment.setStatus(Appointment.Status.CONFIRMED);
 
@@ -213,6 +215,9 @@ class AppointmentServiceTest {
 
     @Test
     void testCancelAppointment() {
+        when(securityContext.getAuthentication()).thenReturn(authentication);
+        when(authentication.getName()).thenReturn("patient@example.com");
+        
         Appointment appointment = new Appointment();
         appointment.setId(1L);
         appointment.setPatient(patient);

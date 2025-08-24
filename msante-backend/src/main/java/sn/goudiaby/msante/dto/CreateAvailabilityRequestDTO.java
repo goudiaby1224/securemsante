@@ -19,4 +19,14 @@ public class CreateAvailabilityRequestDTO {
     
     @NotNull(message = "Duration in minutes is required")
     private Integer durationMinutes;
+
+    // Manual getters and setters to ensure compilation works
+    public LocalDateTime getStartTime() { return startTime; }
+    public void setStartTime(LocalDateTime startTime) { this.startTime = startTime; }
+
+    public LocalDateTime getEndTime() { return endTime; }
+    public void setEndTime(LocalDateTime endTime) { this.endTime = endTime; }
+
+    public Integer getDurationMinutes() { return durationMinutes; }
+    public void setDurationMinutes(Integer durationMinutes) { this.durationMinutes = durationMinutes; }
 }

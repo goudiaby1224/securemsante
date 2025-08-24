@@ -21,12 +21,18 @@ import java.util.Date;
 import java.util.stream.Collectors;
 
 @Service
-@RequiredArgsConstructor
 public class AuthService {
 
     private final AuthenticationManager authenticationManager;
     private final UserService userService;
     private final Environment env;
+
+    // Manual constructor to ensure compilation works
+    public AuthService(AuthenticationManager authenticationManager, UserService userService, Environment env) {
+        this.authenticationManager = authenticationManager;
+        this.userService = userService;
+        this.env = env;
+    }
 
     public LoginResponseDTO authenticate(String email, String password) {
         Authentication authentication = UsernamePasswordAuthenticationToken.unauthenticated(email, password);
@@ -54,7 +60,7 @@ public class AuthService {
             UserResponseDTO userDTO = new UserResponseDTO(
                     user.getId(), user.getFirstName(), user.getLastName(),
                     user.getPhone(), user.getEmail(), user.getRole().name(),
-                    user.isEnabled(), user.getCreatedAt().toString()
+                    user.isEnabled(), user.getCreatedAt() != null ? user.getCreatedAt().toString() : ""
             );
 
             return new LoginResponseDTO(userDTO, jwt);

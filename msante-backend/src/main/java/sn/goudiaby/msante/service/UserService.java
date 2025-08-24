@@ -22,13 +22,21 @@ import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Service
-@RequiredArgsConstructor
 public class UserService {
 
     private final UserRepository userRepository;
     private final PatientRepository patientRepository;
     private final DoctorRepository doctorRepository;
     private final PasswordEncoder passwordEncoder;
+
+    // Manual constructor to ensure compilation works
+    public UserService(UserRepository userRepository, PatientRepository patientRepository, 
+                      DoctorRepository doctorRepository, PasswordEncoder passwordEncoder) {
+        this.userRepository = userRepository;
+        this.patientRepository = patientRepository;
+        this.doctorRepository = doctorRepository;
+        this.passwordEncoder = passwordEncoder;
+    }
 
     @Transactional
     public User registerUser(RegisterRequestDTO request) {

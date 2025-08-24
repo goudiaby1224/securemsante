@@ -1,6 +1,5 @@
 package sn.goudiaby.msante.service;
 
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import sn.goudiaby.msante.repository.AppointmentRepository;
 import sn.goudiaby.msante.repository.DoctorRepository;
@@ -15,13 +14,23 @@ import java.util.List;
 import java.util.Map;
 
 @Service
-@RequiredArgsConstructor
 public class AnalyticsService {
 
     private final AppointmentRepository appointmentRepository;
     private final DoctorRepository doctorRepository;
     private final PatientRepository patientRepository;
     private final AvailabilityRepository availabilityRepository;
+
+    // Manual constructor to ensure compilation works
+    public AnalyticsService(AppointmentRepository appointmentRepository, 
+                           DoctorRepository doctorRepository, 
+                           PatientRepository patientRepository, 
+                           AvailabilityRepository availabilityRepository) {
+        this.appointmentRepository = appointmentRepository;
+        this.doctorRepository = doctorRepository;
+        this.patientRepository = patientRepository;
+        this.availabilityRepository = availabilityRepository;
+    }
 
     public Map<String, Object> getDashboardStats() {
         Map<String, Object> stats = new HashMap<>();

@@ -21,13 +21,23 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-@RequiredArgsConstructor
 public class AppointmentService {
 
     private final AppointmentRepository appointmentRepository;
     private final AvailabilityRepository availabilityRepository;
     private final PatientRepository patientRepository;
     private final UserRepository userRepository;
+
+    // Manual constructor to ensure compilation works
+    public AppointmentService(AppointmentRepository appointmentRepository, 
+                             AvailabilityRepository availabilityRepository, 
+                             PatientRepository patientRepository, 
+                             UserRepository userRepository) {
+        this.appointmentRepository = appointmentRepository;
+        this.availabilityRepository = availabilityRepository;
+        this.patientRepository = patientRepository;
+        this.userRepository = userRepository;
+    }
 
     @Transactional
     public AppointmentResponseDTO bookAppointment(BookAppointmentRequestDTO request) {

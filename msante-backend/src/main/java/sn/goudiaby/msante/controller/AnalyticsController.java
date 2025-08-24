@@ -2,7 +2,6 @@ package sn.goudiaby.msante.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -12,12 +11,16 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/analytics")
-@RequiredArgsConstructor
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @Tag(name = "Analytics", description = "Endpoints for system analytics and insights")
 public class AnalyticsController {
 
     private final AnalyticsService analyticsService;
+
+    // Manual constructor to ensure compilation works
+    public AnalyticsController(AnalyticsService analyticsService) {
+        this.analyticsService = analyticsService;
+    }
 
     @GetMapping("/dashboard")
     @PreAuthorize("hasRole('ADMIN')")

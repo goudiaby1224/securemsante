@@ -2,7 +2,6 @@ package sn.goudiaby.msante.controller;
 
 import jakarta.validation.Valid;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -14,12 +13,16 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/appointments")
-@RequiredArgsConstructor
 @CrossOrigin(origins = {"http://localhost:4200", "https://localhost:4200"})
 @Tag(name = "Appointment", description = "Endpoints for appointment management")
 public class AppointmentController {
 
     private final AppointmentService appointmentService;
+
+    // Manual constructor to ensure compilation works
+    public AppointmentController(AppointmentService appointmentService) {
+        this.appointmentService = appointmentService;
+    }
 
     @PostMapping("/book")
     @PreAuthorize("hasRole('PATIENT')")

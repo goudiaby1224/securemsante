@@ -1,6 +1,5 @@
 package sn.goudiaby.msante.controller;
 
-import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -14,11 +13,15 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/availability")
-@RequiredArgsConstructor
 @CrossOrigin(origins = {"http://localhost:4200", "https://localhost:4200"})
 public class AvailabilityController {
 
     private final AvailabilityService availabilityService;
+
+    // Manual constructor to ensure compilation works
+    public AvailabilityController(AvailabilityService availabilityService) {
+        this.availabilityService = availabilityService;
+    }
 
     @PostMapping("/create")
     @PreAuthorize("hasRole('DOCTOR')")

@@ -50,7 +50,7 @@ class UserServiceTest {
         patientRequest = new RegisterRequestDTO();
         patientRequest.setEmail("patient@example.com");
         patientRequest.setPassword("password123");
-//        patientRequest.setRole("PATIENT");
+        patientRequest.setUserType("PATIENT");
         patientRequest.setAddress("123 Main St");
         patientRequest.setPhone("555-1234");
         patientRequest.setDateOfBirth("1990-01-01");
@@ -58,7 +58,7 @@ class UserServiceTest {
         doctorRequest = new RegisterRequestDTO();
         doctorRequest.setEmail("doctor@example.com");
         doctorRequest.setPassword("password123");
-//        doctorRequest.setRole("DOCTOR");
+        doctorRequest.setUserType("DOCTOR");
         doctorRequest.setSpecialty("Cardiology");
         doctorRequest.setLicenseNumber("LIC12345");
         doctorRequest.setPhone("555-5678");

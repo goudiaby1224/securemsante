@@ -18,4 +18,20 @@ public class SearchAvailabilityRequestDTO {
     private Long doctorId;
     private List<String> preferredTimes; // e.g., ["09:00", "14:00"]
     private Integer maxDistance; // in kilometers, for future location-based search
+
+    // Manual getters and setters to ensure compilation works
+    public LocalDate getDate() { return date; }
+    public void setDate(LocalDate date) { this.date = date; }
+
+    public String getSpecialty() { return specialty; }
+    public void setSpecialty(String specialty) { this.specialty = specialty; }
+
+    public Long getDoctorId() { return doctorId; }
+    public void setDoctorId(Long doctorId) { this.doctorId = doctorId; }
+
+    public List<String> getPreferredTimes() { return preferredTimes; }
+    public void setPreferredTimes(List<String> preferredTimes) { this.preferredTimes = preferredTimes; }
+
+    public Integer getMaxDistance() { return maxDistance; }
+    public void setMaxDistance(Integer maxDistance) { this.maxDistance = maxDistance; }
 }

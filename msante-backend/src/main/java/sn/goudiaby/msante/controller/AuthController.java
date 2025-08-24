@@ -36,7 +36,6 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/auth")
-@RequiredArgsConstructor
 @CrossOrigin(origins = {"http://localhost:4200", "https://localhost:4200"})
 @Tag(name = "Authentication", description = "Endpoints for authentication")
 public class AuthController {
@@ -47,6 +46,18 @@ public class AuthController {
 
     private final PasswordEncoder passwordEncoder;
     private final Environment env;
+
+    // Manual constructor to ensure compilation works
+    public AuthController(UserService userService, AuthService authService, 
+                         AuthenticationManager authenticationManager, 
+                         PasswordEncoder passwordEncoder, Environment env) {
+        this.userService = userService;
+        this.authService = authService;
+        this.authenticationManager = authenticationManager;
+        this.passwordEncoder = passwordEncoder;
+        this.env = env;
+    }
+
     @PostMapping("/register")
     public ResponseEntity<LoginResponseDTO> register(@RequestBody RegisterRequestDTO request) {
         userService.registerUser(request); // hash + save
