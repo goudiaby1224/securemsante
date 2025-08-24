@@ -11,6 +11,7 @@ import sn.goudiaby.msante.model.User;
 import sn.goudiaby.msante.repository.DoctorRepository;
 import sn.goudiaby.msante.repository.UserRepository;
 import sn.goudiaby.msante.repository.AvailabilityRepository;
+import sn.goudiaby.msante.model.Availability;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -90,7 +91,7 @@ public class DoctorService {
         return convertToDTO(doctor);
     }
 
-    public List<Object> getDoctorAvailability(Long doctorId, String dateStr) {
+    public List<Availability> getDoctorAvailability(Long doctorId, String dateStr) {
         LocalDate date = LocalDate.parse(dateStr, DateTimeFormatter.ISO_LOCAL_DATE);
         return availabilityRepository.findAvailableSlotsByDoctorAndDate(doctorId, date);
     }

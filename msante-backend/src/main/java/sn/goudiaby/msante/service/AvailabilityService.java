@@ -29,7 +29,7 @@ public class AvailabilityService {
 
     public List<AvailabilityDTO> getAvailableSlots() {
         LocalDateTime now = LocalDateTime.now();
-        List<Availability> availabilities = availabilityRepository.findAvailableSlots(now);
+        List<Availability> availabilities = availabilityRepository.findAvailableSlotsAfter(now);
         
         return availabilities.stream()
                 .map(this::convertToDTO)

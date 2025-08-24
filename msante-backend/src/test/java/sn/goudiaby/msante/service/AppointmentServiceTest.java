@@ -9,7 +9,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
-import sn.goudiaby.msante.dto.AppointmentDTO;
+import sn.goudiaby.msante.dto.AppointmentResponseDTO;
 import sn.goudiaby.msante.dto.BookAppointmentRequestDTO;
 import sn.goudiaby.msante.model.*;
 import sn.goudiaby.msante.repository.*;
@@ -110,7 +110,7 @@ class AppointmentServiceTest {
 
         when(appointmentRepository.save(any(Appointment.class))).thenReturn(appointment);
 
-        AppointmentDTO result = appointmentService.bookAppointment(bookRequest);
+        AppointmentResponseDTO result = appointmentService.bookAppointment(bookRequest);
 
         assertNotNull(result);
         assertEquals(1L, result.getId());
@@ -204,7 +204,7 @@ class AppointmentServiceTest {
         when(appointmentRepository.findByPatientId(1L))
                 .thenReturn(Arrays.asList(appointment));
 
-        List<AppointmentDTO> result = appointmentService.getPatientAppointments();
+        List<AppointmentResponseDTO> result = appointmentService.getPatientAppointments();
 
         assertNotNull(result);
         assertEquals(1, result.size());

@@ -53,7 +53,7 @@ class UserServiceTest {
 //        patientRequest.setRole("PATIENT");
         patientRequest.setAddress("123 Main St");
         patientRequest.setPhone("555-1234");
-        patientRequest.setBirthDate("1990-01-01");
+        patientRequest.setDateOfBirth("1990-01-01");
 
         doctorRequest = new RegisterRequestDTO();
         doctorRequest.setEmail("doctor@example.com");
@@ -124,7 +124,7 @@ class UserServiceTest {
 
     @Test
     void testRegisterPatientWithNullBirthDate() {
-        patientRequest.setBirthDate(null);
+        patientRequest.setDateOfBirth(null);
         when(userRepository.existsByEmail(anyString())).thenReturn(false);
         when(passwordEncoder.encode(anyString())).thenReturn("encodedPassword");
         when(userRepository.save(any(User.class))).thenReturn(mockUser);
@@ -138,7 +138,7 @@ class UserServiceTest {
 
     @Test
     void testRegisterPatientWithEmptyBirthDate() {
-        patientRequest.setBirthDate("");
+        patientRequest.setDateOfBirth("");
         when(userRepository.existsByEmail(anyString())).thenReturn(false);
         when(passwordEncoder.encode(anyString())).thenReturn("encodedPassword");
         when(userRepository.save(any(User.class))).thenReturn(mockUser);
@@ -175,7 +175,7 @@ class UserServiceTest {
 
     @Test
     void testRegisterPatientWithInvalidDateFormat() {
-        patientRequest.setBirthDate("invalid-date");
+        patientRequest.setDateOfBirth("invalid-date");
         when(userRepository.existsByEmail(anyString())).thenReturn(false);
         when(passwordEncoder.encode(anyString())).thenReturn("encodedPassword");
         when(userRepository.save(any(User.class))).thenReturn(mockUser);
@@ -194,7 +194,7 @@ class UserServiceTest {
             Patient patient = invocation.getArgument(0);
             assertEquals("123 Main St", patient.getAddress());
 //            assertEquals("555-1234", patient.getPhone());
-            assertEquals(LocalDate.of(1990, 1, 1), patient.getBirthDate());
+            assertEquals(LocalDate.of(1990, 1, 1), patient.getDateOfBirth());
             return patient;
         });
 

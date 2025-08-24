@@ -12,7 +12,7 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 import sn.goudiaby.msante.config.SecurityConfig;
-import sn.goudiaby.msante.dto.AppointmentDTO;
+import sn.goudiaby.msante.dto.AppointmentResponseDTO;
 import sn.goudiaby.msante.dto.BookAppointmentRequestDTO;
 import sn.goudiaby.msante.service.AppointmentService;
 
@@ -46,7 +46,7 @@ class AppointmentControllerTest {
     private ObjectMapper objectMapper;
 
     private BookAppointmentRequestDTO bookRequest;
-    private AppointmentDTO appointmentDTO;
+    private AppointmentResponseDTO appointmentDTO;
 
     @BeforeEach
     void setUp() {
@@ -54,7 +54,7 @@ class AppointmentControllerTest {
         bookRequest.setAvailabilityId(1L);
         bookRequest.setNotes("Regular checkup");
 
-        appointmentDTO = new AppointmentDTO();
+        appointmentDTO = new AppointmentResponseDTO();
         appointmentDTO.setId(1L);
         appointmentDTO.setPatientId(1L);
         appointmentDTO.setPatientName("John Doe");
@@ -120,7 +120,7 @@ class AppointmentControllerTest {
     @Test
     @WithMockUser(roles = "PATIENT")
     void testGetPatientAppointments() throws Exception {
-        List<AppointmentDTO> appointments = Arrays.asList(appointmentDTO);
+        List<AppointmentResponseDTO> appointments = Arrays.asList(appointmentDTO);
         when(appointmentService.getPatientAppointments()).thenReturn(appointments);
 
         mockMvc.perform(get("/api/appointments/patient")
@@ -136,7 +136,7 @@ class AppointmentControllerTest {
     @Test
     @WithMockUser(roles = "DOCTOR")
     void testGetDoctorAppointments() throws Exception {
-        List<AppointmentDTO> appointments = Arrays.asList(appointmentDTO);
+        List<AppointmentResponseDTO> appointments = Arrays.asList(appointmentDTO);
         when(appointmentService.getDoctorAppointments()).thenReturn(appointments);
 
         mockMvc.perform(get("/api/appointments/doctor")

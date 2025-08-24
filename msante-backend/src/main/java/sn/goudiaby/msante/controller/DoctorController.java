@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import sn.goudiaby.msante.dto.DoctorProfileDTO;
 import sn.goudiaby.msante.dto.AdvancedSearchDTO;
 import sn.goudiaby.msante.model.Doctor;
+import sn.goudiaby.msante.model.Availability;
 import sn.goudiaby.msante.service.DoctorService;
 
 import jakarta.validation.Valid;
@@ -68,7 +69,7 @@ public class DoctorController {
     @GetMapping("/{id}/availability")
     @PreAuthorize("permitAll()")
     @Operation(summary = "Get doctor availability", description = "Get available time slots for a specific doctor")
-    public ResponseEntity<List<Object>> getDoctorAvailability(@PathVariable Long id, @RequestParam String date) {
+    public ResponseEntity<List<Availability>> getDoctorAvailability(@PathVariable Long id, @RequestParam String date) {
         return ResponseEntity.ok(doctorService.getDoctorAvailability(id, date));
     }
 

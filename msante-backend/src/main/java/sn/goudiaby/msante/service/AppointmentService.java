@@ -159,12 +159,26 @@ public class AppointmentService {
         return AppointmentResponseDTO.fromAppointment(savedAppointment);
     }
 
+    private AppointmentResponseDTO convertAppointmentToResponseDTO(Appointment appointment) {
+        AppointmentResponseDTO dto = new AppointmentResponseDTO();
+        dto.setDoctorId(appointment.getDoctor().getId());
+        dto.setDoctorFirstName(appointment.getDoctor().getUser().getFirstName());
+        dto.setDoctorLastName(appointment.getDoctor().getUser().getLastName());
+        dto.setDoctorEmail(appointment.getDoctor().getUser().getEmail());
+        dto.setDoctorSpecialty(appointment.getDoctor().getSpecialty());
+        dto.setDoctorDepartment(appointment.getDoctor().getLicenseNumber());
+        dto.setAppointmentTime(appointment.getAvailability().getStartTime());
+        dto.setEndTime(appointment.getAvailability().getEndTime());
+        dto.setStatus(appointment.getStatus().name());
+        return dto;
+    }
+
     public List<AppointmentResponseDTO> getUpcomingAppointments() {
         try {
             String email = SecurityContextHolder.getContext().getAuthentication().getName();
             List<Appointment> appointments = appointmentRepository.findUpcomingAppointments(email, LocalDateTime.now());
             return appointments.stream()
-                    .map(this::convertAvailabilityToDTO)
+                    .map(this::convertAppointmentToResponseDTO)
                     .collect(Collectors.toList());
         } catch (Exception e) {
             throw new RuntimeException("Error retrieving upcoming appointments: " + e.getMessage());
