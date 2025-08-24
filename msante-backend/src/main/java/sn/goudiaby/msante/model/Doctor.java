@@ -62,7 +62,7 @@ public class Doctor {
     @Column(length = 200)
     private String workingHours;
 
-    @Column(precision = 3, scale = 2)
+    @Column
     private Double rating;
 
     @Column
