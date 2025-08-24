@@ -73,7 +73,7 @@ public class Patient {
 
     @ElementCollection
     @CollectionTable(name = "patient_medical_conditions", joinColumns = @JoinColumn(name = "patient_id"))
-    @Column(name = "condition")
+    @Column(name = "medical_condition")
     private List<String> medicalConditions;
 
     @ElementCollection

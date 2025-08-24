@@ -30,10 +30,10 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long> 
            "ORDER BY a.availability.startTime ASC")
     List<Appointment> findUpcomingAppointments(@Param("email") String email, @Param("now") java.time.LocalDateTime now);
 
-    @Query("SELECT COUNT(a) FROM Appointment a WHERE DATE(a.appointmentTime) = :date")
+    @Query("SELECT COUNT(a) FROM Appointment a WHERE DATE(a.availability.startTime) = :date")
     Long countByDate(@Param("date") java.time.LocalDate date);
 
-    @Query("SELECT COUNT(a) FROM Appointment a WHERE DATE(a.appointmentTime) BETWEEN :startDate AND :endDate")
+    @Query("SELECT COUNT(a) FROM Appointment a WHERE DATE(a.availability.startTime) BETWEEN :startDate AND :endDate")
     Long countByDateRange(@Param("startDate") java.time.LocalDate startDate, @Param("endDate") java.time.LocalDate endDate);
 
     @Query("SELECT COUNT(a) FROM Appointment a WHERE a.doctor.id = :doctorId")
@@ -54,15 +54,15 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long> 
     @Query("SELECT DISTINCT a.doctor.id FROM Appointment a WHERE a.patient.id = :patientId ORDER BY COUNT(a) DESC")
     List<Long> findPreferredDoctorsByPatientId(@Param("patientId") Long patientId);
 
-    @Query("SELECT DATE(a.appointmentTime) as date, COUNT(a) as count FROM Appointment a WHERE DATE(a.appointmentTime) BETWEEN :startDate AND :endDate GROUP BY DATE(a.appointmentTime) ORDER BY date")
+    @Query("SELECT DATE(a.availability.startTime) as date, COUNT(a) as count FROM Appointment a WHERE DATE(a.availability.startTime) BETWEEN :startDate AND :endDate GROUP BY DATE(a.availability.startTime) ORDER BY date")
     List<Object> getDailyAppointmentCounts(@Param("startDate") java.time.LocalDate startDate, @Param("endDate") java.time.LocalDate endDate);
 
-    @Query("SELECT YEAR(a.appointmentTime) as year, MONTH(a.appointmentTime) as month, COUNT(a) as count FROM Appointment a WHERE DATE(a.appointmentTime) BETWEEN :startDate AND :endDate GROUP BY YEAR(a.appointmentTime), MONTH(a.appointmentTime) ORDER BY year, month")
+    @Query("SELECT YEAR(a.availability.startTime) as year, MONTH(a.availability.startTime) as month, COUNT(a) as count FROM Appointment a WHERE DATE(a.availability.startTime) BETWEEN :startDate AND :endDate GROUP BY YEAR(a.availability.startTime), MONTH(a.availability.startTime) ORDER BY year, month")
     List<Object> getMonthlyAppointmentCounts(@Param("startDate") java.time.LocalDate startDate, @Param("endDate") java.time.LocalDate endDate);
 
     @Query("SELECT a.doctor.specialty as specialty, COUNT(a) as count FROM Appointment a GROUP BY a.doctor.specialty ORDER BY count DESC")
     List<Object> getAppointmentCountsBySpecialty();
 
-    @Query("SELECT a FROM Appointment a WHERE DATE(a.appointmentTime) = :date")
+    @Query("SELECT a FROM Appointment a WHERE DATE(a.availability.startTime) = :date")
     List<Appointment> findByDate(@Param("date") java.time.LocalDate date);
 }
