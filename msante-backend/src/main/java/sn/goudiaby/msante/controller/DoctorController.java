@@ -2,7 +2,6 @@ package sn.goudiaby.msante.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -17,12 +16,16 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/doctors")
-@RequiredArgsConstructor
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @Tag(name = "Doctor Management", description = "Endpoints for doctor management and search")
 public class DoctorController {
 
     private final DoctorService doctorService;
+
+    // Manual constructor to ensure compilation works
+    public DoctorController(DoctorService doctorService) {
+        this.doctorService = doctorService;
+    }
 
     @GetMapping("/profile")
     @PreAuthorize("hasRole('DOCTOR')")
@@ -85,5 +88,18 @@ public class DoctorController {
     @Operation(summary = "Get top rated doctors", description = "Retrieve list of top rated doctors")
     public ResponseEntity<List<DoctorProfileDTO>> getTopRatedDoctors(@RequestParam(defaultValue = "10") Integer limit) {
         return ResponseEntity.ok(doctorService.getTopRatedDoctors(limit));
+    }
+
+    @GetMapping("/health")
+    @Operation(summary = "Doctor service health check", description = "Simple health check endpoint for testing")
+    public ResponseEntity<String> getHealth() {
+        return ResponseEntity.ok("Doctor service is healthy");
+    }
+
+    @GetMapping("/test-specialties")
+    @Operation(summary = "Get test specialties", description = "Simple endpoint for testing that returns hardcoded specialties")
+    public ResponseEntity<List<String>> getTestSpecialties() {
+        List<String> specialties = List.of("Cardiology", "Neurology", "Pediatrics", "General Medicine");
+        return ResponseEntity.ok(specialties);
     }
 }

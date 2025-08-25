@@ -2,7 +2,6 @@ package sn.goudiaby.msante.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -14,12 +13,16 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/patients")
-@RequiredArgsConstructor
 @CrossOrigin(origins = "*", allowedHeaders = "*")
-@Tag(name = "Patient Management", description = "Endpoints for patient profile and medical history management")
+@Tag(name = "Patient Management", description = "Endpoints for patient profile management")
 public class PatientController {
 
     private final PatientService patientService;
+
+    // Manual constructor to ensure compilation works
+    public PatientController(PatientService patientService) {
+        this.patientService = patientService;
+    }
 
     @GetMapping("/profile")
     @PreAuthorize("hasRole('PATIENT')")

@@ -3,7 +3,6 @@ package sn.goudiaby.msante.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -15,12 +14,16 @@ import sn.goudiaby.msante.service.UserService;
 
 @RestController
 @RequestMapping("/api/users")
-@RequiredArgsConstructor
-@CrossOrigin(origins = {"http://localhost:4200", "https://localhost:4200"})
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 @Tag(name = "User Management", description = "Endpoints for user profile management")
 public class UserController {
 
     private final UserService userService;
+
+    // Manual constructor to ensure compilation works
+    public UserController(UserService userService) {
+        this.userService = userService;
+    }
 
     @GetMapping("/profile")
     @PreAuthorize("isAuthenticated()")

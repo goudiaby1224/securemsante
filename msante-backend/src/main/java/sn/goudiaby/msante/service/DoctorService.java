@@ -1,6 +1,5 @@
 package sn.goudiaby.msante.service;
 
-import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,7 +18,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-@RequiredArgsConstructor
 @Transactional
 public class DoctorService {
 
@@ -27,40 +25,57 @@ public class DoctorService {
     private final UserRepository userRepository;
     private final AvailabilityRepository availabilityRepository;
 
+    // Manual constructor to ensure compilation works
+    public DoctorService(DoctorRepository doctorRepository, UserRepository userRepository, AvailabilityRepository availabilityRepository) {
+        this.doctorRepository = doctorRepository;
+        this.userRepository = userRepository;
+        this.availabilityRepository = availabilityRepository;
+    }
+
     public DoctorProfileDTO getCurrentDoctorProfile() {
-        String email = SecurityContextHolder.getContext().getAuthentication().getName();
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("User not found"));
-        
-        Doctor doctor = doctorRepository.findByUserId(user.getId())
-                .orElseThrow(() -> new RuntimeException("Doctor profile not found"));
-        
-        return convertToDTO(doctor);
+        try {
+            String email = SecurityContextHolder.getContext().getAuthentication().getName();
+            User user = userRepository.findByEmail(email)
+                    .orElseThrow(() -> new RuntimeException("User not found"));
+            
+            Doctor doctor = doctorRepository.findByUserId(user.getId())
+                    .orElseThrow(() -> new RuntimeException("Doctor profile not found"));
+            
+            return convertToDTO(doctor);
+        } catch (Exception e) {
+            // Fallback for test environment or when no authentication context
+            throw new RuntimeException("Unable to retrieve doctor profile: " + e.getMessage());
+        }
     }
 
     public DoctorProfileDTO updateDoctorProfile(DoctorProfileDTO profileDTO) {
-        String email = SecurityContextHolder.getContext().getAuthentication().getName();
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("User not found"));
-        
-        Doctor doctor = doctorRepository.findByUserId(user.getId())
-                .orElseThrow(() -> new RuntimeException("Doctor profile not found"));
-        
-        // Update doctor fields
-        doctor.setFirstName(profileDTO.getFirstName());
-        doctor.setLastName(profileDTO.getLastName());
-        doctor.setPhone(profileDTO.getPhone());
-        doctor.setSpecialty(profileDTO.getSpecialty());
-        doctor.setDepartment(profileDTO.getDepartment());
-        doctor.setBio(profileDTO.getBio());
-        doctor.setEducation(profileDTO.getEducation());
-        doctor.setExperience(profileDTO.getExperience());
-        doctor.setConsultationFee(profileDTO.getConsultationFee());
-        doctor.setLanguages(profileDTO.getLanguages());
-        doctor.setWorkingHours(profileDTO.getWorkingHours());
-        
-        Doctor savedDoctor = doctorRepository.save(doctor);
-        return convertToDTO(savedDoctor);
+        try {
+            String email = SecurityContextHolder.getContext().getAuthentication().getName();
+            User user = userRepository.findByEmail(email)
+                    .orElseThrow(() -> new RuntimeException("User not found"));
+            
+            Doctor doctor = doctorRepository.findByUserId(user.getId())
+                    .orElseThrow(() -> new RuntimeException("Doctor profile not found"));
+            
+            // Update doctor fields
+            doctor.setFirstName(profileDTO.getFirstName());
+            doctor.setLastName(profileDTO.getLastName());
+            doctor.setPhone(profileDTO.getPhone());
+            doctor.setSpecialty(profileDTO.getSpecialty());
+            doctor.setDepartment(profileDTO.getDepartment());
+            doctor.setBio(profileDTO.getBio());
+            doctor.setEducation(profileDTO.getEducation());
+            doctor.setExperience(profileDTO.getExperience());
+            doctor.setConsultationFee(profileDTO.getConsultationFee());
+            doctor.setLanguages(profileDTO.getLanguages());
+            doctor.setWorkingHours(profileDTO.getWorkingHours());
+            
+            Doctor savedDoctor = doctorRepository.save(doctor);
+            return convertToDTO(savedDoctor);
+        } catch (Exception e) {
+            // Fallback for test environment or when no authentication context
+            throw new RuntimeException("Unable to update doctor profile: " + e.getMessage());
+        }
     }
 
     public List<DoctorProfileDTO> searchDoctors(AdvancedSearchDTO searchDTO) {

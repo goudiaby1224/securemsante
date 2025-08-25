@@ -13,12 +13,16 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Service
-@RequiredArgsConstructor
 public class NotificationService {
     
     private static final Logger log = LoggerFactory.getLogger(NotificationService.class);
 
     private final AppointmentService appointmentService;
+
+    // Manual constructor to ensure compilation works
+    public NotificationService(AppointmentService appointmentService) {
+        this.appointmentService = appointmentService;
+    }
 
     public void sendAppointmentConfirmation(Appointment appointment) {
         // Send confirmation email/SMS to patient

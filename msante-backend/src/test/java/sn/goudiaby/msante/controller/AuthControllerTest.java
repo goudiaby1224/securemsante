@@ -66,7 +66,7 @@ class AuthControllerTest {
         registerRequest = new RegisterRequestDTO();
         registerRequest.setEmail("test@example.com");
         registerRequest.setPassword("password123");
-        registerRequest.setRole("PATIENT");
+        registerRequest.setUserType("PATIENT");
 
         loginRequest = new LoginRequestDTO();
         loginRequest.setEmail("test@example.com");

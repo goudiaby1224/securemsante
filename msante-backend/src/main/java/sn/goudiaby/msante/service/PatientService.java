@@ -1,6 +1,5 @@
 package sn.goudiaby.msante.service;
 
-import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,12 +14,17 @@ import java.util.ArrayList;
 import java.util.Map;
 
 @Service
-@RequiredArgsConstructor
 @Transactional
 public class PatientService {
 
     private final PatientRepository patientRepository;
     private final UserRepository userRepository;
+
+    // Manual constructor to ensure compilation works
+    public PatientService(PatientRepository patientRepository, UserRepository userRepository) {
+        this.patientRepository = patientRepository;
+        this.userRepository = userRepository;
+    }
 
     public PatientProfileDTO getCurrentPatientProfile() {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();

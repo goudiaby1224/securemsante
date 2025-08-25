@@ -1,10 +1,7 @@
 package sn.goudiaby.msante.service;
 
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import sn.goudiaby.msante.dto.AvailabilityDTO;
 import sn.goudiaby.msante.dto.CreateAvailabilityRequestDTO;
@@ -20,12 +17,20 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-@RequiredArgsConstructor
 public class AvailabilityService {
 
     private final AvailabilityRepository availabilityRepository;
     private final DoctorRepository doctorRepository;
     private final UserRepository userRepository;
+
+    // Manual constructor to ensure compilation works
+    public AvailabilityService(AvailabilityRepository availabilityRepository,
+                              DoctorRepository doctorRepository,
+                              UserRepository userRepository) {
+        this.availabilityRepository = availabilityRepository;
+        this.doctorRepository = doctorRepository;
+        this.userRepository = userRepository;
+    }
 
     public List<AvailabilityDTO> getAvailableSlots() {
         LocalDateTime now = LocalDateTime.now();

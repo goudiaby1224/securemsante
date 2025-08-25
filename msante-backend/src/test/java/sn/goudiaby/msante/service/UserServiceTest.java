@@ -125,6 +125,7 @@ class UserServiceTest {
     @Test
     void testRegisterPatientWithNullBirthDate() {
         patientRequest.setDateOfBirth(null);
+        patientRequest.setUserType("PATIENT"); // Ensure userType is set
         when(userRepository.existsByEmail(anyString())).thenReturn(false);
         when(passwordEncoder.encode(anyString())).thenReturn("encodedPassword");
         when(userRepository.save(any(User.class))).thenReturn(mockUser);
@@ -139,6 +140,7 @@ class UserServiceTest {
     @Test
     void testRegisterPatientWithEmptyBirthDate() {
         patientRequest.setDateOfBirth("");
+        patientRequest.setUserType("PATIENT"); // Ensure userType is set
         when(userRepository.existsByEmail(anyString())).thenReturn(false);
         when(passwordEncoder.encode(anyString())).thenReturn("encodedPassword");
         when(userRepository.save(any(User.class))).thenReturn(mockUser);
@@ -169,13 +171,14 @@ class UserServiceTest {
             userService.findByEmail("nonexistent@example.com");
         });
 
-        assertEquals("User not found", exception.getMessage());
+        assertEquals("User not found with email: nonexistent@example.com", exception.getMessage());
         verify(userRepository).findByEmail("nonexistent@example.com");
     }
 
     @Test
     void testRegisterPatientWithInvalidDateFormat() {
         patientRequest.setDateOfBirth("invalid-date");
+        patientRequest.setUserType("PATIENT"); // Ensure userType is set
         when(userRepository.existsByEmail(anyString())).thenReturn(false);
         when(passwordEncoder.encode(anyString())).thenReturn("encodedPassword");
         when(userRepository.save(any(User.class))).thenReturn(mockUser);
@@ -187,6 +190,7 @@ class UserServiceTest {
 
     @Test
     void testCreatePatientProfileWithValidData() {
+        patientRequest.setUserType("PATIENT"); // Ensure userType is set
         when(userRepository.existsByEmail(anyString())).thenReturn(false);
         when(passwordEncoder.encode(anyString())).thenReturn("encodedPassword");
         when(userRepository.save(any(User.class))).thenReturn(mockUser);
@@ -205,6 +209,7 @@ class UserServiceTest {
 
     @Test
     void testCreateDoctorProfileWithValidData() {
+        doctorRequest.setUserType("DOCTOR"); // Ensure userType is set
         mockUser.setRole(User.Role.DOCTOR);
         when(userRepository.existsByEmail(anyString())).thenReturn(false);
         when(passwordEncoder.encode(anyString())).thenReturn("encodedPassword");

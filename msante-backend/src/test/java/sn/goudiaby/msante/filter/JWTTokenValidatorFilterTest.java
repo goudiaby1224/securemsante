@@ -13,7 +13,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.core.env.Environment;
-import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import sn.goudiaby.msante.constants.ApplicationConstants;
 
@@ -41,9 +40,6 @@ class JWTTokenValidatorFilterTest {
     @Mock
     private FilterChain filterChain;
 
-    @Mock
-    private SecurityContext securityContext;
-
     @InjectMocks
     private JWTTokenValidatorFilter jwtTokenValidatorFilter;
 
@@ -66,7 +62,7 @@ class JWTTokenValidatorFilterTest {
                 .signWith(secretKey)
                 .compact();
 
-        SecurityContextHolder.setContext(securityContext);
+        SecurityContextHolder.setContext(SecurityContextHolder.createEmptyContext());
     }
 
     @Test
@@ -78,7 +74,7 @@ class JWTTokenValidatorFilterTest {
         jwtTokenValidatorFilter.doFilterInternal(request, response, filterChain);
 
         verify(filterChain).doFilter(request, response);
-        verify(securityContext).setAuthentication(any());
+        verify(SecurityContextHolder.getContext()).setAuthentication(any());
     }
 
     @Test
@@ -88,7 +84,7 @@ class JWTTokenValidatorFilterTest {
         jwtTokenValidatorFilter.doFilterInternal(request, response, filterChain);
 
         verify(filterChain).doFilter(request, response);
-        verify(securityContext, never()).setAuthentication(any());
+        verify(SecurityContextHolder.getContext(), never()).setAuthentication(any());
     }
 
     @Test
@@ -102,7 +98,7 @@ class JWTTokenValidatorFilterTest {
         assertDoesNotThrow(() -> jwtTokenValidatorFilter.doFilterInternal(request, response, filterChain));
 
         verify(filterChain).doFilter(request, response);
-        verify(securityContext, never()).setAuthentication(any());
+        verify(SecurityContextHolder.getContext(), never()).setAuthentication(any());
     }
 
     @Test
@@ -125,7 +121,7 @@ class JWTTokenValidatorFilterTest {
         assertDoesNotThrow(() -> jwtTokenValidatorFilter.doFilterInternal(request, response, filterChain));
 
         verify(filterChain).doFilter(request, response);
-        verify(securityContext, never()).setAuthentication(any());
+        verify(SecurityContextHolder.getContext(), never()).setAuthentication(any());
     }
 
     @Test
@@ -139,7 +135,7 @@ class JWTTokenValidatorFilterTest {
         assertDoesNotThrow(() -> jwtTokenValidatorFilter.doFilterInternal(request, response, filterChain));
 
         verify(filterChain).doFilter(request, response);
-        verify(securityContext, never()).setAuthentication(any());
+        verify(SecurityContextHolder.getContext(), never()).setAuthentication(any());
     }
 
     @Test
@@ -171,6 +167,6 @@ class JWTTokenValidatorFilterTest {
         assertDoesNotThrow(() -> jwtTokenValidatorFilter.doFilterInternal(request, response, filterChain));
 
         verify(filterChain).doFilter(request, response);
-        verify(securityContext, never()).setAuthentication(any());
+        verify(SecurityContextHolder.getContext(), never()).setAuthentication(any());
     }
 }

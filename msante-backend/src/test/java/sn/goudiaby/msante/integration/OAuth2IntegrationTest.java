@@ -58,7 +58,7 @@ class OAuth2IntegrationTest {
         RegisterRequestDTO registerRequest = new RegisterRequestDTO();
         registerRequest.setEmail("integration@test.com");
         registerRequest.setPassword("password123");
-        registerRequest.setRole("PATIENT");
+        registerRequest.setUserType("PATIENT");
         registerRequest.setAddress("123 Integration St");
         registerRequest.setPhone("555-9999");
 

@@ -9,6 +9,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.GrantedAuthority;
 import sn.goudiaby.msante.dto.AppointmentResponseDTO;
 import sn.goudiaby.msante.dto.BookAppointmentRequestDTO;
 import sn.goudiaby.msante.model.*;
@@ -18,6 +19,7 @@ import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.Collection;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -39,12 +41,6 @@ class AppointmentServiceTest {
     @Mock
     private UserRepository userRepository;
 
-    @Mock
-    private SecurityContext securityContext;
-
-    @Mock
-    private Authentication authentication;
-
     @InjectMocks
     private AppointmentService appointmentService;
 
@@ -56,8 +52,6 @@ class AppointmentServiceTest {
 
     @BeforeEach
     void setUp() {
-        SecurityContextHolder.setContext(securityContext);
-
         patientUser = new User();
         patientUser.setId(1L);
         patientUser.setEmail("patient@example.com");
@@ -67,7 +61,6 @@ class AppointmentServiceTest {
         patient.setId(1L);
         patient.setUser(patientUser);
         patient.setAddress("123 Test St");
-//        patient.setPhone("555-1234");
 
         User doctorUser = new User();
         doctorUser.setId(2L);
@@ -92,10 +85,50 @@ class AppointmentServiceTest {
         bookRequest.setNotes("Test appointment");
     }
 
+    private Authentication createMockAuthentication() {
+        return new Authentication() {
+            @Override
+            public Collection<? extends GrantedAuthority> getAuthorities() {
+                return List.of();
+            }
+
+            @Override
+            public Object getCredentials() {
+                return null;
+            }
+
+            @Override
+            public Object getDetails() {
+                return null;
+            }
+
+            @Override
+            public Object getPrincipal() {
+                return patientUser;
+            }
+
+            @Override
+            public boolean isAuthenticated() {
+                return true;
+            }
+
+            @Override
+            public void setAuthenticated(boolean isAuthenticated) throws IllegalArgumentException {
+                // Mock implementation
+            }
+
+            @Override
+            public String getName() {
+                return "patient@example.com";
+            }
+        };
+    }
+
     @Test
     void testBookAppointmentSuccess() {
-        when(securityContext.getAuthentication()).thenReturn(authentication);
-        when(authentication.getName()).thenReturn("patient@example.com");
+        SecurityContextHolder.setContext(SecurityContextHolder.createEmptyContext());
+        SecurityContextHolder.getContext().setAuthentication(createMockAuthentication());
+
         when(userRepository.findByEmail("patient@example.com")).thenReturn(Optional.of(patientUser));
         when(patientRepository.findByUserId(1L)).thenReturn(Optional.of(patient));
         when(availabilityRepository.findById(1L)).thenReturn(Optional.of(availability));
@@ -125,23 +158,25 @@ class AppointmentServiceTest {
 
     @Test
     void testBookAppointmentUserNotFound() {
-        when(securityContext.getAuthentication()).thenReturn(authentication);
-        when(authentication.getName()).thenReturn("patient@example.com");
+        SecurityContextHolder.setContext(SecurityContextHolder.createEmptyContext());
+        SecurityContextHolder.getContext().setAuthentication(createMockAuthentication());
+
         when(userRepository.findByEmail("patient@example.com")).thenReturn(Optional.empty());
 
         RuntimeException exception = assertThrows(RuntimeException.class, () -> {
             appointmentService.bookAppointment(bookRequest);
         });
 
-        assertEquals("User not found", exception.getMessage());
+        assertEquals("User not found with email: patient@example.com", exception.getMessage());
         verify(userRepository).findByEmail("patient@example.com");
         verify(appointmentRepository, never()).save(any(Appointment.class));
     }
 
     @Test
     void testBookAppointmentPatientProfileNotFound() {
-        when(securityContext.getAuthentication()).thenReturn(authentication);
-        when(authentication.getName()).thenReturn("patient@example.com");
+        SecurityContextHolder.setContext(SecurityContextHolder.createEmptyContext());
+        SecurityContextHolder.getContext().setAuthentication(createMockAuthentication());
+
         when(userRepository.findByEmail("patient@example.com")).thenReturn(Optional.of(patientUser));
         when(patientRepository.findByUserId(1L)).thenReturn(Optional.empty());
 
@@ -156,8 +191,9 @@ class AppointmentServiceTest {
 
     @Test
     void testBookAppointmentAvailabilityNotFound() {
-        when(securityContext.getAuthentication()).thenReturn(authentication);
-        when(authentication.getName()).thenReturn("patient@example.com");
+        SecurityContextHolder.setContext(SecurityContextHolder.createEmptyContext());
+        SecurityContextHolder.getContext().setAuthentication(createMockAuthentication());
+
         when(userRepository.findByEmail("patient@example.com")).thenReturn(Optional.of(patientUser));
         when(patientRepository.findByUserId(1L)).thenReturn(Optional.of(patient));
         when(availabilityRepository.findById(1L)).thenReturn(Optional.empty());
@@ -173,10 +209,11 @@ class AppointmentServiceTest {
 
     @Test
     void testBookAppointmentSlotNotAvailable() {
+        SecurityContextHolder.setContext(SecurityContextHolder.createEmptyContext());
+        SecurityContextHolder.getContext().setAuthentication(createMockAuthentication());
+
         availability.setStatus(Availability.Status.BOOKED);
 
-        when(securityContext.getAuthentication()).thenReturn(authentication);
-        when(authentication.getName()).thenReturn("patient@example.com");
         when(userRepository.findByEmail("patient@example.com")).thenReturn(Optional.of(patientUser));
         when(patientRepository.findByUserId(1L)).thenReturn(Optional.of(patient));
         when(availabilityRepository.findById(1L)).thenReturn(Optional.of(availability));
@@ -191,8 +228,9 @@ class AppointmentServiceTest {
 
     @Test
     void testGetPatientAppointments() {
-        when(securityContext.getAuthentication()).thenReturn(authentication);
-        when(authentication.getName()).thenReturn("patient@example.com");
+        SecurityContextHolder.setContext(SecurityContextHolder.createEmptyContext());
+        SecurityContextHolder.getContext().setAuthentication(createMockAuthentication());
+
         when(userRepository.findByEmail("patient@example.com")).thenReturn(Optional.of(patientUser));
         when(patientRepository.findByUserId(1L)).thenReturn(Optional.of(patient));
 
@@ -215,12 +253,13 @@ class AppointmentServiceTest {
 
     @Test
     void testCancelAppointment() {
-        when(securityContext.getAuthentication()).thenReturn(authentication);
-        when(authentication.getName()).thenReturn("patient@example.com");
+        SecurityContextHolder.setContext(SecurityContextHolder.createEmptyContext());
+        SecurityContextHolder.getContext().setAuthentication(createMockAuthentication());
         
         Appointment appointment = new Appointment();
         appointment.setId(1L);
         appointment.setPatient(patient);
+        appointment.setDoctor(doctor);
         appointment.setAvailability(availability);
         appointment.setStatus(Appointment.Status.CONFIRMED);
 
@@ -242,6 +281,9 @@ class AppointmentServiceTest {
 
     @Test
     void testCancelAppointmentNotFound() {
+        SecurityContextHolder.setContext(SecurityContextHolder.createEmptyContext());
+        SecurityContextHolder.getContext().setAuthentication(createMockAuthentication());
+
         when(appointmentRepository.findById(anyLong())).thenReturn(Optional.empty());
 
         RuntimeException exception = assertThrows(RuntimeException.class, () -> {

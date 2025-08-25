@@ -46,4 +46,16 @@ public class UpdateProfileRequestDTO {
     public String getEmergencyContactName() { return emergencyContactName; }
     public String getEmergencyContactPhone() { return emergencyContactPhone; }
     public String getEmergencyContactRelationship() { return emergencyContactRelationship; }
+    
+    // Manual setters to ensure compilation works
+    public void setFirstName(String firstName) { this.firstName = firstName; }
+    public void setLastName(String lastName) { this.lastName = lastName; }
+    public void setPhone(String phone) { this.phone = phone; }
+    public void setAddress(String address) { this.address = address; }
+    public void setDateOfBirth(LocalDate dateOfBirth) { this.dateOfBirth = dateOfBirth; }
+    public void setSpecialty(String specialty) { this.specialty = specialty; }
+    public void setLicenseNumber(String licenseNumber) { this.licenseNumber = licenseNumber; }
+    public void setEmergencyContactName(String emergencyContactName) { this.emergencyContactName = emergencyContactName; }
+    public void setEmergencyContactPhone(String emergencyContactPhone) { this.emergencyContactPhone = emergencyContactPhone; }
+    public void setEmergencyContactRelationship(String emergencyContactRelationship) { this.emergencyContactRelationship = emergencyContactRelationship; }
 }
